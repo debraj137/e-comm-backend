@@ -5,6 +5,7 @@ const port = 3000;
 const cors = require("cors");
 const categoryRoutes = require("../backend/routes/category");
 const brandRoutes = require("../backend/routes/brand");
+const productRoutes = require("../backend/routes/product")
 app.use(cors());
 app.use(express.json())
 
@@ -16,6 +17,7 @@ app.get("/",(req,res)=>{
 
 app.use("/category",categoryRoutes);
 app.use("/brand",brandRoutes); 
+app.use("/product",productRoutes);
 
 async function connectDb() {
     await mongoose.connect("mongodb://localhost:27017",{
