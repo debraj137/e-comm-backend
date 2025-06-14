@@ -9,7 +9,7 @@ async function addProduct(model) {
 }
 
 async function updateProduct(id, model) {
-    await Product.findByIdAndUpdate(id,model);
+    await Product.findByIdAndUpdate(id, model);
 }
 
 async function deleteProduct(id) {
@@ -18,7 +18,7 @@ async function deleteProduct(id) {
 
 async function getAllProducts() {
     let products = await Product.find();
-    return products.map(x=>x.toObject());
+    return products.map(x => x.toObject());
 }
 
 async function getProduct(id) {
@@ -26,19 +26,62 @@ async function getProduct(id) {
     return product.toObject();
 }
 
-async function getNewProducts(){
+async function getNewProducts() {
     let newProducts = await Product.find({
         isNewProduct: true
     })
-    return newProducts.map((x)=>x.toObject())
+    return newProducts.map((x) => x.toObject())
 }
 
-async function getFeaturedProducts(){
+async function getFeaturedProducts() {
     let newProducts = await Product.find({
         isFeatured: true
     })
-    return newProducts.map((x)=>x.toObject())
+    return newProducts.map((x) => x.toObject())
+}
+
+async function getProductForListing(searchTerm, categoryId, page, pageSize, sortBy, sortOrder, brandId) {
+    if (!sortBy) {
+        sortBy = 'price'
+    }
+    if (!sortOrder) {
+        sortOrder = -1
+    }
+    let queryFilter = {};
+    if (searchTerm) {
+        queryFilter.$or = [
+            {
+                name : {$regex: '.*'+searchTerm+'.*'}
+            },
+            {
+                shortDescription : {$regex: '.*'+searchTerm+'.*'}
+            }
+        ]
+        
+    }
+    if (categoryId) {
+        queryFilter.categoryId = categoryId
+    }
+    if (brandId) {
+        queryFilter.brandId = brandId
+    }
+    const products = await Product.find(queryFilter)
+        .sort({
+            [sortBy]: +sortOrder
+        })
+        .skip((+page - 1) * +pageSize)
+        .limit(+pageSize);
+    return products.map(x => x.toObject());
 }
 
 
-module.exports = {addProduct, updateProduct, deleteProduct, getAllProducts, getProduct, getNewProducts, getFeaturedProducts}
+module.exports = {
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    getAllProducts,
+    getProduct,
+    getNewProducts,
+    getFeaturedProducts,
+    getProductForListing
+}
