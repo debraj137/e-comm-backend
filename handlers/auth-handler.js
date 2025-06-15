@@ -27,7 +27,7 @@ async function loginUser(model) {
         },
     "secret",
     {
-        expiresIn: "1h"
+        expiresIn: "24h"
     });
     return {token, user}
     }

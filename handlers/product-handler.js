@@ -65,6 +65,7 @@ async function getProductForListing(searchTerm, categoryId, page, pageSize, sort
     if (brandId) {
         queryFilter.brandId = brandId
     }
+    console.log('queryFilter: ',queryFilter);
     const products = await Product.find(queryFilter)
         .sort({
             [sortBy]: +sortOrder
