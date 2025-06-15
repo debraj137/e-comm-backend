@@ -2,6 +2,7 @@ const express = require("express");
 const { getNewProducts, getFeaturedProducts, getProductForListing, getProduct } = require("../handlers/product-handler");
 const { getCategories } = require("../handlers/category-handler");
 const { getBrands } = require("../handlers/brand-handler");
+const { getWishlist, addToWishlist, removeFromWishlist } = require("../handlers/wishlist-handler");
 const router = express.Router();
 
 router.get("/new-products", async (req, res) => {
@@ -34,6 +35,29 @@ router.get("/product/:id", async (req, res)=>{
     const id = req.params['id'];
     const product = await getProduct(id);
     res.send(product);
+})
+
+router.get("/wishlists", async (req, res)=>{
+    console.log(req.user);
+    const userId = req.user.id;
+    const items = await getWishlist(userId);
+    res.send(items);
+})
+
+router.post("/wishlists/:id", async (req, res)=>{
+    const userId = req.user.id;
+    const productId = req.params.id;
+    const item = await addToWishlist(userId, productId);
+    res.send(item)
+})
+
+router.delete("/wishlists/:id", async (req, res)=>{
+    const userId = req.user.id;
+    const productId = req.params.id;
+    const item = await removeFromWishlist(userId, productId);
+    res.send({
+        message: "deleted successfully"
+    })
 })
 
 module.exports = router;
