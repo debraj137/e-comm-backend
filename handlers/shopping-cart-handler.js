@@ -34,4 +34,10 @@ async function getCartItems(userId) {
     });
 }
 
-module.exports = { getCartItems, addToCart, removeFromCart }
+async function clearCart(userId) {
+    await Cart.deleteMany({
+        userId: userId
+    })
+}
+
+module.exports = { getCartItems, addToCart, removeFromCart, clearCart }

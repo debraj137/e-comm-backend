@@ -1,8 +1,12 @@
 const mongoose = require("mongoose");
+const {Schema} = mongoose;
 const orderSchema = new mongoose.Schema({
+    userId: { type: Schema.Types.ObjectId, ref: 'users' },
     date: Date,
-    items: Array(any),
-    status: Number
+    items: Array(mongoose.Schema.Types.Mixed),
+    paymentType: String,
+    address: Array(mongoose.Schema.Types.Mixed),
+    status: String
 });
 const Order = mongoose.model("orders", orderSchema);
 module.exports = Order;

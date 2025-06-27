@@ -3,7 +3,8 @@ const { getNewProducts, getFeaturedProducts, getProductForListing, getProduct } 
 const { getCategories } = require("../handlers/category-handler");
 const { getBrands } = require("../handlers/brand-handler");
 const { getWishlist, addToWishlist, removeFromWishlist } = require("../handlers/wishlist-handler");
-const { getCartItems, addToCart, removeFromCart } = require("../handlers/shopping-cart-handler");
+const { getCartItems, addToCart, removeFromCart, clearCart } = require("../handlers/shopping-cart-handler");
+const { addOrder, getCustomerOrders } = require("../handlers/order-handler");
 const router = express.Router();
 
 router.get("/new-products", async (req, res) => {
@@ -81,6 +82,22 @@ router.delete("/carts/:id", async (req, res)=>{
     const productId = req.params.id;
     const items = await removeFromCart(userId, productId);
     res.send(items);
+})
+
+router.post("/order", async (req, res)=>{
+    const userId = req.user.id;
+    const order = req.body;
+    await addOrder(userId, order);
+    await clearCart(userId);
+    return res.send({
+        message: "Order created successfully"
+    })
+})
+
+router.get("/orders",async (req, res)=>{
+    const userId = req.user.id;
+    const orders = await getCustomerOrders(userId);
+    res.send(orders);
 })
 
 module.exports = router;
