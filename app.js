@@ -5,6 +5,7 @@ const port = 3000;
 const cors = require("cors");
 const categoryRoutes = require("../backend/routes/category");
 const brandRoutes = require("../backend/routes/brand");
+const orderRoutes = require("../backend/routes/order");
 const productRoutes = require("../backend/routes/product");
 const customerRoutes = require("../backend/routes/customer");
 const authRoutes = require("./routes/auth");
@@ -20,6 +21,7 @@ app.get("/",(req,res)=>{
 
 app.use("/category",verifyToken,isAdmin,categoryRoutes);
 app.use("/brand",verifyToken,isAdmin,brandRoutes); 
+app.use("/orders",verifyToken, isAdmin,orderRoutes);
 app.use("/product",verifyToken,isAdmin,productRoutes);
 app.use("/customer",verifyToken, customerRoutes);
 app.use("/auth",authRoutes);
